@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="flash-container"></div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>새로운 할 일 추가</h4>
+    </div>
+    <div class="card-body">
+        <form id="add-todo-form">
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="flex-grow-1">
+                    <input type="text" class="form-control" id="content-input" name="content" placeholder="오늘 무엇을 할까요?" required>
+                </div>
+                <div class="form-check form-switch form-check-inline">
+                    <input class="form-check-input" type="checkbox" role="switch" id="important-input" name="important">
+                    <label class="form-check-label" for="important-input">중요</label>
+                </div>
+                <input type="date" class="form-control" id="duedate-input" name="due_date" style="max-width: 160px;">
+                <button class="btn btn-primary" type="submit">
+                    <i class="fa-solid fa-plus"></i> 추가
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4>나의 할 일 목록</h4>
+    </div>
+    <ul id="todo-list" class="list-group list-group-flush">
+        {% for todo in todos %}
+            <li id="todo-{{ todo.id }}" class="list-group-item d-flex justify-content-between align-items-center {% if todo.important and not todo.completed %}bg-warning-subtle{% endif %}">
+                <div>
+                    <a href="#" class="text-decoration-none me-2 important-btn" data-id="{{ todo.id }}" title="중요도 변경">
+                        <i class="{% if todo.important %}fa-solid fa-star text-warning{% else %}fa-regular fa-star text-muted{% endif %}"></i>
+                    </a>
+                    <span class="todo-content" style="{{ 'text-decoration: line-through; color: #6c757d;' if todo.completed else '' }}">
+                        {{ todo.content }}
+                    </span>
+                    {% if todo.due_date and not todo.completed %}
+                        <small class="ms-2 due-date {% if todo.due_date < today %}text-danger fw-bold{% else %}text-muted{% endif %}">
+                            (마감: {{ todo.due_date.strftime('%Y-%m-%d') }})
+                        </small>
+                    {% endif %}
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="#" class="btn btn-sm btn-{{ 'success' if not todo.completed else 'secondary' }} complete-btn" data-id="{{ todo.id }}" title="{{ '완료 처리' if not todo.completed else '완료 취소' }}">
+                        <i class="fa-solid fa-check"></i>
+                    </a>
+                    <a href="{{ url_for('edit_todo', todo_id=todo.id) }}" class="btn btn-sm btn-warning" title="수정">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-danger delete-btn" data-id="{{ todo.id }}" title="삭제">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </div>
+            </li>
+        {% else %}
+            <li id="empty-todo-msg" class="list-group-item text-center">할 일이 없습니다. 새 할 일을 추가해보세요!</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
