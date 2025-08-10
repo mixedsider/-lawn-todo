@@ -1,6 +1,11 @@
 {% extends "base.html" %}
+{% from "_lawn_graph.html" import render_lawn %}
 
 {% block content %}
+{% if weeks and today %}
+    {{ render_lawn(weeks, month_weeks, today, size='small') }}
+{% endif %}
+
 <div id="flash-container"></div>
 
 <div class="card mb-4">
@@ -40,7 +45,7 @@
                     <span class="todo-content" style="{{ 'text-decoration: line-through; color: #6c757d;' if todo.completed else '' }}">
                         {{ todo.content }}
                     </span>
-                    {% if todo.due_date and not todo.completed %}
+                    {% if todo.due_date and not todo.completed and today %}
                         <small class="ms-2 due-date {% if todo.due_date < today %}text-danger fw-bold{% else %}text-muted{% endif %}">
                             (마감: {{ todo.due_date.strftime('%Y-%m-%d') }})
                         </small>
@@ -50,7 +55,7 @@
                     <a href="#" class="btn btn-sm btn-{{ 'success' if not todo.completed else 'secondary' }} complete-btn" data-id="{{ todo.id }}" title="{{ '완료 처리' if not todo.completed else '완료 취소' }}">
                         <i class="fa-solid fa-check"></i>
                     </a>
-                    <a href="{{ url_for('edit_todo', todo_id=todo.id) }}" class="btn btn-sm btn-warning" title="수정">
+                    <a href="{{ url_for('main.edit_todo', todo_id=todo.id) }}" class="btn btn-sm btn-warning" title="수정">
                         <i class="fa-solid fa-pen"></i>
                     </a>
                     <a href="#" class="btn btn-sm btn-danger delete-btn" data-id="{{ todo.id }}" title="삭제">

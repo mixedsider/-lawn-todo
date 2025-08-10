@@ -8,7 +8,7 @@
                 <h3 class="text-center">회원가입</h3>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('signup') }}">
+                <form method="POST" action="{{ url_for('auth.signup') }}">
                     <div class="mb-3">
                         <label for="username" class="form-label">사용자 이름</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -17,13 +17,17 @@
                         <label for="password" class="form-label">비밀번호</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="confirm_password" class="form-label">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                    </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success">회원가입</button>
                     </div>
                 </form>
             </div>
             <div class="card-footer text-center">
-                <a href="{{ url_for('login') }}">이미 계정이 있으신가요? 로그인</a>
+                <a href="{{ url_for('auth.login') }}">이미 계정이 있으신가요? 로그인</a>
             </div>
         </div>
     </div>
